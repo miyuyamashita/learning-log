@@ -17,14 +17,21 @@ const GetReset = () => {
     // const token = localStorage.getItem("token");
 
     try {
-      const email = emailRef.current?.value;
+      const email =  emailRef.current?.value;
+
+      if(!email){
+        setErrorMessage('email is required');
+        return
+      }
+
+      const userEmail = {email}
       const res = await axios.post(
-        "http://localhost:3005/auth/getChangePassword",
-        email,
+        "https://localhost:3000/auth/getChangePassword",
+        userEmail,
         {
           headers: {
             "Content-Type": "application/json",
-            // "Authorization": `Bearer ${token}`,
+
           },
         }
       );

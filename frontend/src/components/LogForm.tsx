@@ -11,8 +11,9 @@ type Log = {
   date: string;
 };
 
-const fetcher = (url: string) => {
-  return fetch(url).then((res) => res.json());
+const fetcher = async (url: string) => {
+  const res = await fetch(url);
+  return res.json();
 };
 
 const LogForm = () => {
@@ -46,12 +47,16 @@ const LogForm = () => {
   }, [isEditing, data]);
 
   const onAddLog = async (e: React.FormEvent) => {
+    const userId = localStorage.getItem('userId');
+    if(!userId){
+      throw new Error('You have to log in')
+    }
     e.preventDefault(); //prevent reload page
     const newLog = {
       title: titleRef.current ? titleRef.current.value : "",
       content: contentRef.current ? contentRef.current.value : "",
       date: dateRef.current ? dateRef.current.value : "",
-      userId: "6800e792c3d92fb63ac98ba7",
+      userId: userId,
     };
     const token = localStorage.getItem("token");
     if(!token){

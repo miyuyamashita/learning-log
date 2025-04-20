@@ -2,7 +2,10 @@ const Log = require("../models/Log");
 const User = require("../models/User");
 
 exports.getLogs = async (req, res, next) => {
-  const logs = await Log.find();
+  const userId = req.userId;
+
+  const logs = await Log.find({ userId: userId });
+
   res.json(logs);
 };
 
@@ -18,6 +21,7 @@ exports.postLog = async (req, res, next) => {
   try {
     const userId = req.userId;
     const newLog = new Log(req.body);
+
     const savedLog = await newLog.save();
     const user = await User.findById(userId);
     if (!user) {

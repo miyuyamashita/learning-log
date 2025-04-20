@@ -11,7 +11,7 @@ module.exports = (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
-    const decodedToken = jwt.verify(token, "secretPayLoad");
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
 
     if (!decodedToken) {
       const e = new Error("Authorization middleware did not work");

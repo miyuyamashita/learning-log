@@ -14,15 +14,48 @@ const ChangePassword = () => {
 
   const onSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const token = localStorage.getItem("token");
+    const params = new URLSearchParams(window.location.search);
+    const token = params.get("token") || localStorage.getItem("token");
+
+    if(!token){
+      setErrorMessage('Invalid or expired token. Please try again.');
+      return
+    }
+
+    localStorage.setItem('token',token);
+
+    window.history.replaceState({}, "", "/reset-password");
+
+    const password = passwordRef.current?.value;
+    const confirmPassword = confirmPasswordRef.current?.value;
+
+    if(!password){
+      setErrorMessage('Password is required');
+      return;
+    }
+
+    if(password.length < 5){
+      setErrorMessage('Password must be at least 5 letters');
+      return
+    }
+
+    if(!confirmPassword){
+      setErrorMessage('Please confirm password');
+      return;
+    }
+
+    if(password !== confirmPassword){
+      setErrorMessage('Passwords do not match');
+      return;
+    }
 
     try {
       const user = {
-        password: passwordRef.current?.value,
-        confirmPassword: confirmPasswordRef.current?.value,
+        password,
+        confirmPassword
       };
       const res = await axios.post(
-        "http://localhost:3005/auth/changePassword",
+        "https://localhost:3000/auth/changePassword",
         user,
         {
           headers: {
@@ -31,6 +64,8 @@ const ChangePassword = () => {
           },
         }
       );
+
+      localStorage.removeItem("token");
 
       navigate("/");
     } catch (e: any) {

@@ -8,17 +8,33 @@ const LoginForm = () => {
   const emailRef = useRef<HTMLInputElement>(null);
   const passwordRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [errorMessages, setErrorMessages] = useState<string[]>([]);
   const inputStyle =
     "border-1 border-sky-500 w-8/10 w-full mb-[10px] p-[10px] bg-white rounded-md";
-
+    const errorMessageStyle = 'text-red-500 mt-[10px] ';
   const onSubmit = async (e: React.FormEvent) => {
+    const errors : string[] = [];
     e.preventDefault();
     try {
-      const user = {
-        email: emailRef.current?.value,
-        password: passwordRef.current?.value,
-      };
+
+        const email=  emailRef.current?.value.trim().toLowerCase();
+        const password= passwordRef.current?.value;
+
+      if(!email){
+        errors.push('Email is not provided');
+      }
+
+      if(!password){
+        errors.push('password is not provided');
+      }
+
+      if(errors.length > 0){
+        setErrorMessages(errors);
+        return
+      }
+
+      const user = {email, password};
+
       const res = await axios.post("https://localhost:3000/auth/login", user, {
         headers: {
           "Content-Type": "application/json",
@@ -26,11 +42,13 @@ const LoginForm = () => {
       });
 
       const token = res.data.token;
+      console.log(res.data);
       localStorage.setItem("token", token);
+      localStorage.setItem('userId',res.data.userId)
       navigate("/home");
     } catch (e: any) {
       if (e.response && e.response.data && e.response.data.message) {
-        setErrorMessage(e.response.data.message);
+        setErrorMessages([e.response.data.message]);
       }
     }
   };
@@ -74,9 +92,9 @@ const LoginForm = () => {
             </Link>
 
 
-          {errorMessage && (
-            <p className="text-red-600 mt-2 font-semibold">{errorMessage}</p>
-          )}
+          {errorMessages.map(error => <p className={errorMessageStyle} key={error}>
+            {error}
+          </p>)}
         </form>
       </div>
     </>

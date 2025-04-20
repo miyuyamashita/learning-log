@@ -5,8 +5,8 @@ const cors = require("cors");
 const https = require("https");
 const fs = require("fs");
 
-const apiRoutes = require("./routes/api.js");
-const authRoutes = require("./routes/auth.js");
+const apiRoute = require("./routes/api.js");
+const authRoute = require("./routes/auth.js");
 
 const app = express();
 
@@ -17,18 +17,20 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 const corsOptions = {
   origin: "http://localhost:5173", // クライアントのURL
-  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 app.use(cors(corsOptions)); //localhost 3005 localhost 5173
-// app.options("*", cors(corsOptions));
 
-// app.use("");
-app.use("/api", apiRoutes);
-app.use("/auth", authRoutes);
+app.use("/api", apiRoute);
+app.use("/auth", authRoute);
 
+//error
 app.use((e, req, res, next) => {
   console.log(e);
+  if (!e.statusCode) {
+    e.statusCode = 500;
+  }
   const status = e.statusCode;
   const message = e.message;
   const data = e.data; //array

@@ -22,12 +22,15 @@ exports.postSignup = async (req, res, next) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
+
     const user = new User({
       email: email,
       password: hashedPassword,
       logs: [],
     });
+
     const savedUser = await user.save();
+
     if (!savedUser) {
       const e = new Error("Create user failed");
       throw e;

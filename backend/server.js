@@ -37,13 +37,7 @@ app.use((e, req, res, next) => {
   res.status(status).json({ message: message, data: data });
 });
 
-mongoose
-  .connect(
-    "mongodb+srv://Miyu:zq19pm@cluster0.yawdz6m.mongodb.net/log?retryWrites=true&w=majority&appName=Cluster0"
-  )
-  .then(() => {
-    console.log("Database connected");
-    https
-      .createServer({ key: privateKey, cert: certificate }, app)
-      .listen(3000);
-  });
+mongoose.connect(process.env.MONGO_URL).then(() => {
+  console.log("Database connected");
+  https.createServer({ key: privateKey, cert: certificate }, app).listen(3000);
+});

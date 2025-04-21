@@ -11,13 +11,15 @@ module.exports = (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
 
-    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
-
-    if (!decodedToken) {
-      const e = new Error("Authorization middleware did not work");
-      e.statusCode = 500;
+    if (!token) {
+      const e = new Error(
+        "Token not provided in expected format: 'Bearer <token>'"
+      );
+      e.statusCode = 401;
       throw e;
     }
+
+    const decodedToken = jwt.verify(token, process.env.JWT_TOKEN);
 
     req.userId = decodedToken.userId;
     next();

@@ -12,13 +12,9 @@
 - 学習ログの登録・編集・削除
 - キーワードでの絞り込み検索
 
-## スクリーンショット
-![screenshot](画像のリンクまたはローカルのscreenshots/example.png)
-
 ## 今後の改善予定
 - ログをプライベート・オープンと選べるようにする
 - ログにタグをつけて絞り込み検索で使えるようにする
-- 
 
-![サンプル画像](./sample-log-detail.png)
-![サンプル画像](./sample-main-page.png)
+![サンプル画像1](./sample-log-detail.png)
+![サンプル画像2](./sample-main-page.png)
